@@ -1,7 +1,8 @@
 <?php 
 
 include "includes/header.php";
-include "dbcon.php";
+include "functions.php";
+session_start();
 
 ?>
 
@@ -14,6 +15,32 @@ if(isset($_GET['country_id'])) {
 
 ?>
 
+<?php 
+
+if(isset($_POST['favorite'])) {
+
+    $country_id = $_POST['country_id'];
+    $user_id = $_POST['user_id'];
+
+    //1. SELECT COUNTRY 
+
+    $query = "SELECT * FROM countries WHERE country_id = $country_id;";
+    $query_run = mysqli_query($connect, $query);
+    $queryResult = mysqli_fetch_array($query_run);
+    $favorites = $queryResult['favorites'];
+
+    //2. UPDATE COUNTRY WITH FAVORITES 
+
+    mysqli_query($connect, "UPDATE countries SET favorites=$favorites+1 WHERE country_id = $country_id");
+
+    //3. INSERT/INCREMENT FAVES FOR COUNTRY 
+
+    mysqli_query($connect, "INSERT INTO favorites(user_id, country_id) VALUES($user_id, $country_id)");
+    exit();
+
+}
+?>
+
 
 <div class="container mt-5">
     <div class="row">
@@ -23,6 +50,10 @@ if(isset($_GET['country_id'])) {
                     <h4>
                         Full Info
                         <a href="homepage.php" class="btn btn-danger float-end">Go Back</a>
+                    </h4>
+                    <div class="card-header">
+                    <h4>
+                    <i class="<?php echo userFavoritedThis($the_country_id) ? 'bi bi-star-fill' : 'bi bi-star' ?>" id="favorite">Add to Favorites</i>
                     </h4>
                 </div>
                 <div class="card-body">
@@ -91,7 +122,6 @@ if(isset($_POST['create_comment'])) {
 
 ?>
 
-
 <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
@@ -154,8 +184,48 @@ if(isset($_POST['create_comment'])) {
             
     ?>
 
+
 <?php 
 
 include "includes/footer.php";
 
 ?>
+
+<script>
+
+$(document).ready(function(){
+
+   
+    var country_id = <?php echo $the_country_id; ?>
+
+    var user_id = <?php echo loggedInUserId(); ?>
+
+
+   // ADD TO FAVORITE 
+
+   $('#favorite').click(function(){
+        $clicked_btn = $(this);
+
+        if($clicked_btn.hasClass('bi bi-star')) {
+            $clicked_btn.removeClass('bi bi-star');
+            $clicked_btn.addClass('bi bi-star-fill');
+            alert("Successfully Added to Favorites");
+
+            $.ajax({
+            url: "view_country.php?country_id=<?php $the_country_id; ?>",
+            type: 'POST', 
+            data: {
+                'favorite': 1, 
+                'country_id': country_id,
+                'user_id': user_id
+            }
+
+        });
+
+        } 
+    });
+
+});
+
+
+</script>

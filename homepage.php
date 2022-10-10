@@ -1,11 +1,38 @@
 <?php 
 
 include "includes/header.php";
-include "dbcon.php";
+include "functions.php";
 
 session_start();
 if(!isset($_SESSION['username'])) {
     header('Location: login.php');
+}
+
+?>
+
+<?php 
+
+if(isset($_POST['unfavorite'])) {
+
+    $country_id = $_POST['country_id'];
+    $user_id = loggedInUserId();
+
+    //1. SELECT CAR
+
+    $query = "SELECT * FROM countries WHERE country_id = $country_id";
+    $query_run = mysqli_query($connect, $query);
+    $queryResult = mysqli_fetch_array($query_run);
+    $favorites = $queryResult['favorites'];
+
+    //2. DELETE FAVORITES
+
+    mysqli_query($connect, "DELETE FROM favorites WHERE country_id = $country_id AND user_id = $user_id");
+
+    //3. UPDATE WITH DECREMENT FAVORITES
+
+    mysqli_query($connect, "UPDATE countries SET favorites = $favorites - 1 WHERE country_id = $country_id");
+    exit();
+
 }
 
 ?>
@@ -55,6 +82,11 @@ if(!isset($_SESSION['username'])) {
                             echo "<td>{$country_region}</td>";
                             echo "<td>{$country_population}</td>";
                             echo "<td class='col text-center'><a href='view_country.php?country_id={$country_id}'class='btn btn-info btn-sm'>View</a></td>";
+                            if(userFavoritedThis($country_id)) {
+                                echo '<td>' ?> <i class="<?php echo userFavoritedThis($country_id) ? 'bi bi-star-fill' : 'bi bi-star' ?>" id="<?php echo $country_id; ?>">Favorited</i>
+                                <?php
+                                 echo '</td>';
+                            }
                             echo "</tr>";
                         }
 
@@ -72,3 +104,37 @@ if(!isset($_SESSION['username'])) {
 include "includes/footer.php";
 
 ?>
+
+<script>
+
+$(document).ready(function(){
+
+    var user_id = <?php echo loggedInUserId(); ?>
+
+
+    $('i').click(function(){
+        $clicked_btn = $(this);
+        var country_id = $(this).attr("id");
+
+        if($clicked_btn.hasClass('bi bi-star-fill')) {
+            $clicked_btn.removeClass('bi bi-star-fill');
+            $clicked_btn.addClass('bi bi-star');
+            alert("Successfully removed to Favorites");
+
+            $.ajax({
+            url: "homepage.php",
+            type: 'POST', 
+            data: {
+                'unfavorite': 1, 
+                'country_id': country_id,
+                'user_id': user_id
+            }
+
+        });
+
+        } 
+    });
+
+});
+
+</script>
