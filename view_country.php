@@ -98,6 +98,9 @@ if(isset($_POST['favorite'])) {
 
 <?php 
 
+if(userFavoritedThis($the_country_id)) {
+
+
 if(isset($_POST['create_comment'])) {
     $the_country_id = $_GET['country_id'];
 
@@ -182,7 +185,7 @@ if(isset($_POST['create_comment'])) {
             </div>        
         <?php }
             
-    ?>
+        } ?>
 
 
 <?php 
@@ -221,6 +224,8 @@ $(document).ready(function(){
             }
 
         });
+
+        location.reload(true);
 
         } 
     });
