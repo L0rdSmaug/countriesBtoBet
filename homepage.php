@@ -26,12 +26,15 @@ include "dbcon.php";
                             <th>Name</th>
                             <th>Region</th>
                             <th>Population</th>
+                            <th>View</th>
                             <th>Favorites</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php 
                         
+                        //Query for displaying all data for each country on homepage
+
                         $query = "SELECT * FROM countries";
                         $select_countries = mysqli_query($connect, $query);
 
@@ -45,6 +48,7 @@ include "dbcon.php";
                             echo "<td>{$country_name}</td>";
                             echo "<td>{$country_region}</td>";
                             echo "<td>{$country_population}</td>";
+                            echo "<td><a href='view_country.php?country_id={$country_id}'class='btn btn-info btn-sm'>View</a></td>";
                             echo "</tr>";
                         }
 
