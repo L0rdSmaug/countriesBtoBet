@@ -65,6 +65,94 @@ if(isset($_GET['country_id'])) {
     </div>
 </div>
 
+<?php 
+
+if(isset($_POST['create_comment'])) {
+    $the_country_id = $_GET['country_id'];
+
+    $comment_author = $_POST['comment_author'];
+    $comment_content = $_POST['comment_content'];
+
+    if(!empty($comment_author) && !empty($comment_content)) {
+        $query = "INSERT INTO comments (comment_country_id, comment_author, comment_content, comment_date) VALUES ($the_country_id, '{$comment_author}', '{$comment_content}', NOW())";
+        $create_comment = mysqli_query($connect, $query);
+
+        if(!$create_comment) {
+            die("Comment creation failed". mysqli_error($connect));
+        }
+
+        $query = "UPDATE countries SET country_comment_count = country_comment_count + 1 WHERE country_id = $the_country_id";
+        $update_comment_count = mysqli_query($connect, $query);
+
+    } else {
+        echo "<script>Fields cannot be empty</script>";
+    }
+}
+
+?>
+
+
+<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-header"><h4>Leave a comment:</h4></div>
+                    <div class="card-body">
+                    <form action="" method="post" role="form">
+
+                        <div class="form-group">
+                            <label for="Author">Author</label>
+                            <input type="text" class="form-control" name="comment_author">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Comment">Comment</label>
+                            <textarea class="form-control" name="comment_content" rows="3"></textarea>
+                        </div>
+                        <button type="submit" name="create_comment" class="btn btn-primary mt-3">Submit</button>
+                    </form>
+                    </div>
+                </div>
+             </div>            
+    </div>
+
+<?php 
+
+        $query = "SELECT * FROM comments WHERE comment_country_id = {$the_country_id} ORDER BY comment_id DESC";
+        $select_comments = mysqli_query($connect, $query);
+
+        if(!$select_comments) {
+            die("Query Failed". mysqli_error($connect));
+        }
+
+        while($row = mysqli_fetch_assoc($select_comments)) {
+            $comment_date = $row['comment_date'];
+            $comment_author = $row['comment_author'];
+            $comment_content = $row['comment_content'];
+        
+
+        ?>
+
+        <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-header"><h4><?php echo $comment_author; ?></h4></div>
+                            <div class="card-body">
+                            <form action="" role="form">
+                                <div class="form-group">
+                                    <label for="Date"><?php echo $comment_date; ?></label>
+                                </div>
+
+                                <div class="form-group">
+                                    <textarea disabled class="form-control" name="comment_content" rows="3"><?php echo $comment_content; ?></textarea>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>            
+            </div>        
+        <?php }
+            
+    ?>
 
 <?php 
 
