@@ -44,7 +44,7 @@ if(isset($_POST['unfavorite'])) {
             <div class="card-header">
                 <h4 class="text-center"> Welcome: 
                     <?php echo $_SESSION['username']; ?>
-                    <a href="logout.php" class="btn btn-dark float-end">Log Out</a>
+                    <a href="logout.php" class="btn btn-danger float-end">Log Out</a>
                 </h4>
             </div>
             <div class="card-header">
@@ -79,7 +79,7 @@ if(isset($_POST['unfavorite'])) {
 
                             echo "<tr>";
                             echo "<td>{$country_name}</td>";
-                            echo "<td>{$country_region}</td>";
+                            echo "<td><a href='view_region.php?region={$country_region}'>{$country_region}</a></td>";
                             echo "<td>{$country_population}</td>";
                             echo "<td class='col text-center'><a href='view_country.php?country_id={$country_id}'class='btn btn-info btn-sm'>View</a></td>";
                             if(userFavoritedThis($country_id)) {
@@ -108,9 +108,9 @@ include "includes/footer.php";
 <script>
 
 $(document).ready(function(){
-
     var user_id = <?php echo loggedInUserId(); ?>
 
+    // REMOVE FROM FAVORITE
 
     $('i').click(function(){
         $clicked_btn = $(this);
@@ -129,9 +129,8 @@ $(document).ready(function(){
                 'country_id': country_id,
                 'user_id': user_id
             }
-
         });
-
+        location.reload(true);
         } 
     });
 
