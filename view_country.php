@@ -67,6 +67,7 @@ if(isset($_POST['favorite'])) {
                         $country_name = $row['name'];
                         $country_region = $row['region'];
                         $country_population = $row['population'];
+                        $format = number_format($country_population);
 
                     }
 
@@ -87,7 +88,7 @@ if(isset($_POST['favorite'])) {
                     <div class="mb-3">
                         <label>Population</label>
                         <p class="form-control">
-                            <?php echo $country_population; ?>
+                            <?php echo $format; ?>
                         </p>
                     </div>
                 </div>

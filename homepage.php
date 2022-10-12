@@ -76,11 +76,12 @@ if(isset($_POST['unfavorite'])) {
                             $country_name = $row['name'];
                             $country_region = $row['region'];
                             $country_population = $row['population'];
+                            $format = number_format($country_population);
 
                             echo "<tr>";
                             echo "<td>{$country_name}</td>";
                             echo "<td><a href='view_region.php?region={$country_region}'>{$country_region}</a></td>";
-                            echo "<td>{$country_population}</td>";
+                            echo "<td>{$format}</td>";
                             echo "<td class='col text-center'><a href='view_country.php?country_id={$country_id}'class='btn btn-info btn-sm'>View</a></td>";
                             if(userFavoritedThis($country_id)) {
                                 echo '<td>' ?> <i class="<?php echo userFavoritedThis($country_id) ? 'bi bi-star-fill' : 'bi bi-star' ?>" id="<?php echo $country_id; ?>">Favorited</i>
