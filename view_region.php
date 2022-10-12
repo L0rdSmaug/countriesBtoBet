@@ -45,7 +45,7 @@ if(isset($_GET['region'])) {
                     <tbody>
                         <?php 
                         
-                        //Query for displaying all data for each country on homepage
+                        //Query for displaying all data for each country from particular region on homepage
 
                         $query = "SELECT * FROM countries WHERE region = '$the_country_region'";
                         $select_countries = mysqli_query($connect, $query);

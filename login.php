@@ -7,6 +7,8 @@ session_start();
 
 <?php 
 
+//Logic for checking whether we have the user credentials in the DB, if so, the user will be redirected to the homepage
+
 if(isset($_POST['login'])) {
 
     $username = $_POST['username'];
@@ -42,6 +44,8 @@ if(isset($_POST['login'])) {
 }
 
 ?>
+
+<!-- Login Form -->
 
 
 <div class="container mt-5">

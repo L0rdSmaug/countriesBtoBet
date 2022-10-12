@@ -6,6 +6,8 @@ include "includes/header.php";
 
 <?php 
 
+//logic to check whether we already have the user in our database, if yes error message will be displayed, if no, the user credentials will be registered in the DB
+
 if($_SERVER['REQUEST_METHOD']=='POST') {
     include 'dbcon.php';
     $username = $_POST['username'];

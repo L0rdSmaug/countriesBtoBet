@@ -19,7 +19,7 @@ if(isset($input)) {
     $country_id = $input['country_id'];
     $user_id = loggedInUserId();
 
-    //1. SELECT CAR
+    //1. SELECT COUNTRY
 
     $query = "SELECT * FROM countries WHERE country_id = $country_id";
     $query_run = mysqli_query($connect, $query);

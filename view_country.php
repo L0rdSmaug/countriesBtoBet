@@ -101,6 +101,8 @@ if(isset($input)) {
 
 <?php 
 
+// If the user favorited the country, only then he is able to see the comment form and insert comments
+
 if(userFavoritedThis($the_country_id)) {
 
 
@@ -128,6 +130,8 @@ if(isset($_POST['create_comment'])) {
 
 ?>
 
+<!-- Comment Form -->
+
 <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
@@ -152,6 +156,8 @@ if(isset($_POST['create_comment'])) {
     </div>
 
 <?php 
+
+// Query to display comments for each favorited country
 
         $query = "SELECT * FROM comments WHERE comment_country_id = {$the_country_id} ORDER BY comment_id DESC";
         $select_comments = mysqli_query($connect, $query);
