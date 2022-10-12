@@ -17,10 +17,12 @@ if(isset($_GET['country_id'])) {
 
 <?php 
 
-if(isset($_POST['favorite'])) {
+$input = json_decode(file_get_contents('php://input'), true);
 
-    $country_id = $_POST['country_id'];
-    $user_id = $_POST['user_id'];
+if(isset($input)) {
+
+    $country_id = $input['country_id'];
+    $user_id = $input['user_id'];
 
     //1. SELECT COUNTRY 
 
@@ -213,18 +215,19 @@ $(document).ready(function(){
         if($clicked_btn.hasClass('bi bi-star')) {
             $clicked_btn.removeClass('bi bi-star');
             $clicked_btn.addClass('bi bi-star-fill');
-            alert("Successfully Added to Favorites");
-
-            $.ajax({
-            url: "view_country.php?country_id=<?php $the_country_id; ?>",
-            type: 'POST', 
-            data: {
+            
+            const postBody = {
                 'favorite': 1, 
                 'country_id': country_id,
                 'user_id': user_id
             }
 
-        });
+            axios.post("view_country.php?country_id=<?php $the_country_id; ?>", postBody).then(res => {
+                alert("Successfully added to Favorites");
+                console.log(res);
+            }).catch(err => {
+                console.error(err);
+            })
 
         location.reload(true);
 

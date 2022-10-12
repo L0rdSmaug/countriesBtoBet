@@ -12,9 +12,11 @@ if(!isset($_SESSION['username'])) {
 
 <?php 
 
-if(isset($_POST['unfavorite'])) {
+$input = json_decode(file_get_contents('php://input'), true);
 
-    $country_id = $_POST['country_id'];
+if(isset($input)) {
+
+    $country_id = $input['country_id'];
     $user_id = loggedInUserId();
 
     //1. SELECT CAR
@@ -120,17 +122,20 @@ $(document).ready(function(){
         if($clicked_btn.hasClass('bi bi-star-fill')) {
             $clicked_btn.removeClass('bi bi-star-fill');
             $clicked_btn.addClass('bi bi-star');
-            alert("Successfully removed to Favorites");
 
-            $.ajax({
-            url: "homepage.php",
-            type: 'POST', 
-            data: {
+            const postBody = {
                 'unfavorite': 1, 
                 'country_id': country_id,
                 'user_id': user_id
             }
-        });
+
+            axios.post("homepage.php", postBody).then(res => {
+                alert("Successfully removed to Favorites");
+                console.log(res);
+            }).catch(err => {
+                console.error(err);
+            })
+
         location.reload(true);
         } 
     });
