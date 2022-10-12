@@ -29,8 +29,6 @@ function userFavoritedThis($the_country_id = '') {
 
     $result = query("SELECT * FROM favorites WHERE user_id =" .loggedInUserId(). " AND country_id = {$the_country_id}");
     return mysqli_num_rows($result);
-    return mysqli_num_rows($result) >= 1 ? true : false;
-    
     }
 
 ?>
